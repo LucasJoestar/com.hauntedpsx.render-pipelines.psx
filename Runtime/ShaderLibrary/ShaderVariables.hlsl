@@ -103,6 +103,12 @@ float3 _FogColorLUTRotationNormal;
 TEXTURE2D(_FogColorLUTTexture2D);
 TEXTURECUBE(_FogColorLUTTextureCube);
 
+// Color Grading
+float4 _ColorGradingLUTParams;
+float _Intensity;
+TEXTURE2D(_ColorGradingLUT);
+SAMPLER(sampler_ColorGradingLUT);
+
 // Lighting (In the future this might be moved to UnityPerMaterial if we get multiple lights):
 int _LightingIsEnabled;
 float _BakedLightingMultiplier;
