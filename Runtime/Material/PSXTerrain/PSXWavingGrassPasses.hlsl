@@ -234,7 +234,6 @@ half4 LitPassFragmentGrass(GrassVaryings i) : SV_Target
 
     // Convert the final color value to 5:6:5 color space (default) - this will actually be whatever color space the user specified in the Precision Volume Override.
     // This emulates a the limited bit-depth frame buffer.
-    color.rgb = ApplyColorGrading(color.rgb);
     color.rgb = ComputeFramebufferDiscretization(color.rgb, positionSS, _PrecisionColor.rgb, _PrecisionColorInverse.rgb);
 #endif
 

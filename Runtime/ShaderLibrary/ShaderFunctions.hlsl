@@ -558,11 +558,4 @@ float3 EvaluateReflectionDirectionMode(int reflectionDirectionMode, float3 R, fl
     return reflectionDirection;
 }
 
-half3 ApplyColorGrading(half3 input)
-{
-    input *= _Intensity;
-    //return SAMPLE_TEXTURE2D(_ColorGradingLUT, sampler_ColorGradingLUT, input.xy).rgb;
-    return ApplyLut2D(TEXTURE2D_ARGS(_ColorGradingLUT, sampler_ColorGradingLUT), input, _ColorGradingLUTParams.xyz);
-}
-
 #endif

@@ -27,7 +27,6 @@ namespace HauntedPSX.RenderPipelines.PSX.Runtime
         int frameCount;
 
         public static PSXRenderPipeline instance = null;
-        private ColorGradingLutRenderer m_ColorGradingRenderer = null;
         
         internal PSXRenderPipeline(PSXRenderPipelineAsset asset)
         {
@@ -35,8 +34,6 @@ namespace HauntedPSX.RenderPipelines.PSX.Runtime
             m_Asset = asset;
             Build();
             Allocate();
-
-            m_ColorGradingRenderer = new ColorGradingLutRenderer();
         }
 
         internal protected void Build()
@@ -235,8 +232,6 @@ namespace HauntedPSX.RenderPipelines.PSX.Runtime
 
             UnityEngine.Rendering.RenderPipeline.BeginFrameRendering(context, cameras);
 
-            m_ColorGradingRenderer.RenderLUT(context);
-
             foreach (var camera in cameras)
             {
                 if (camera == null) { continue; }
@@ -285,8 +280,6 @@ namespace HauntedPSX.RenderPipelines.PSX.Runtime
                 // Setup camera for rendering (sets render target, view/projection matrices and other
                 // per-camera built-in shader variables).
                 context.SetupCameraProperties(camera);
-
-                m_ColorGradingRenderer.PushGlobalParameters(cmd);
 
                 bool hdrIsSupported = false;
                 RTHandle rasterizationRT = psxCamera.GetCurrentFrameRT((int)PSXCameraFrameHistoryType.Rasterization);
@@ -348,10 +341,7 @@ namespace HauntedPSX.RenderPipelines.PSX.Runtime
 
                     TryDrawAccumulationMotionBlurFinalBlit(psxCamera, cmd, camera.targetTexture, copyColorRespectFlipYMaterial);
                 }
-
-
-                m_ColorGradingRenderer.OnFinishRendering(cmd);
-
+                
                 context.ExecuteCommandBuffer(cmd);
                 cmd.Release();
                 context.Submit();
@@ -1879,9 +1869,9 @@ namespace HauntedPSX.RenderPipelines.PSX.Runtime
             if (animateMaterials)
             {
 #if UNITY_EDITOR
-                time = Application.isPlaying ? Time.timeSinceLevelLoad : Time.realtimeSinceStartup;
+                time = Application.isPlaying ? Time.unscaledTime : Time.realtimeSinceStartup;
 #else
-            time = Time.timeSinceLevelLoad;
+            time = Time.unscaledTime;
 #endif
             }
             else
